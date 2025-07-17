@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Cookies from "js-cookie"; 
+import axios from "axios"
 import './login.css';
 const Login=()=>{
     const navigate=useNavigate();
@@ -8,7 +9,7 @@ const Login=()=>{
     const [pass,setPass]=useState(null);
     const handleSubmit=async()=>{
          try {
-            const response=await axios.post("{base_url}/api/auth/login", {
+            const response=await axios.post("http://localhost:3000/api/auth/login", {
                 email,
                 password: pass,
             });
