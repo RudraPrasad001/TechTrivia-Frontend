@@ -20,15 +20,16 @@
 }
 
 .login {
-  background:  linear-gradient(90deg, #6a11cb, #2575fc, #6a11cb);;
+  background:  linear-gradient(90deg, #6a11cb, #2575fc, #6a11cb);
   border: none;
   padding: 18px 39px;
   color: white;
-  margin-bottom:1%;
+  margin-bottom:2.5%;
   font-size: 18px;
   border-radius: 50px;
   cursor: pointer;
   outline: none;
+  width:13%;
   transition: background-position 0.5s, transform 0.3s, box-shadow 0.3s;
   background-size: 200% 200%;
   box-shadow: 0 4px 12px rgba(0,0,0,0.3);
