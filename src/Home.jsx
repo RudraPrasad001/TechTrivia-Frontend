@@ -25,19 +25,9 @@ const Home=()=>{
             <div>
                 <h1>Welcome to Home Page !!!!!!</h1>
                 {user && <p>Logged in as:{user.email}</p>}
+                <button onClick={()=>navigate("/create")}>Create Quiz</button>
             </div>
-        
-        
-        
-        
-        
-        
         </>
-
-
-
-
-
     );
 }
 export default Home;
