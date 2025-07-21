@@ -1,9 +1,9 @@
 import { useState } from "react";
+import axios from "axios";
 
 import "./create.css";
 
 const Create = () => {
-  const [title, setTitle] = useState("");
   const [question, setQuestion] = useState("");
   const [options, setOptions] = useState(["", ""]);
   const [correctIndex, setCorrectIndex] = useState(null);
@@ -21,20 +21,20 @@ const Create = () => {
   };
 
   const handleSubmit = async () => {
-    if (!title || !question || correctIndex === null || options.some(opt => opt.trim() === "")) {
+    if ( !question || correctIndex === null || options.some(opt => opt.trim() === "")) {
       alert("Please fill all fields and select a correct answer.");
       return;
     }
 
     const payload = {
-      title,
       question,
       options,
-      correctOption: correctIndex,
+      correctOption: options[correctIndex],
     };
 
     try {
-      await axios.post("{backend}/api/create-path", payload);
+      console.log(payload);
+      await axios.post("http://localhost:3000/api/admin/add-questions", payload);
       alert("Question submitted successfully!");
       setQuestion("");
       setOptions(["", ""]);
@@ -49,13 +49,6 @@ const Create = () => {
     <div className="create-bg">
       <div className="create-container">
         <h2>Create Question</h2>
-
-        <input
-          type="text"
-          placeholder="Enter Title (e.g. Data Structures)"
-          value={title}
-          onChange={(e) => setTitle(e.target.value)}
-        />
 
         <input
           type="text"
