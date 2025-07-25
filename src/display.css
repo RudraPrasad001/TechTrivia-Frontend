@@ -3,7 +3,7 @@
   background-color: black;
   width: 100vw;
   height: 100vh;
-
+gap:10px;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -11,12 +11,14 @@
 
 .content {
   text-align: center;
+  
 }
 
 .title-image {
   width: 590px; 
-  height: auto;
-  margin-bottom: 20px;
+ 
+ 
+  text-align: center;
 }
 
 .login {
@@ -24,7 +26,7 @@
   border: none;
   padding: 18px 39px;
   color: white;
-  margin-bottom:2.5%;
+ 
   font-size: 18px;
   border-radius: 50px;
   cursor: pointer;

@@ -1,12 +1,25 @@
-import { useState } from "react";
-
+import { useState, useEffect } from "react";
+import axios from "axios";
 import "./create.css";
 
 const Create = () => {
-  const [title, setTitle] = useState("");
   const [question, setQuestion] = useState("");
   const [options, setOptions] = useState(["", ""]);
   const [correctIndex, setCorrectIndex] = useState(null);
+  const [selectedSet, setSelectedSet] = useState(1);
+  const [setCounts, setSetCounts] = useState({ 1: 0, 2: 0, 3: 0, 4: 0 });
+
+  useEffect(() => {
+    const fetchSetCounts = async () => {
+      try {
+        const res = await axios.get("http://localhost:3000/api/admin/set-counts");
+        setSetCounts(res.data);
+      } catch (err) {
+        console.error("Failed to fetch set counts", err);
+      }
+    };
+    fetchSetCounts();
+  }, []);
 
   const handleOptionChange = (index, value) => {
     const updatedOptions = [...options];
@@ -21,21 +34,31 @@ const Create = () => {
   };
 
   const handleSubmit = async () => {
-    if (!title || !question || correctIndex === null || options.some(opt => opt.trim() === "")) {
+    if (!question || correctIndex === null || options.some(opt => opt.trim() === "")) {
       alert("Please fill all fields and select a correct answer.");
       return;
     }
 
+    if (setCounts[selectedSet] >= 10) {
+      alert(`Set ${selectedSet} already has 10 questions (limit reached).`);
+      return;
+    }
+
     const payload = {
-      title,
+      set: selectedSet,
       question,
       options,
-      correctOption: correctIndex,
+      correct: options[correctIndex],
     };
 
     try {
-      await axios.post("{backend}/api/create-path", payload);
+      await axios.post("http://localhost:3000/api/admin/add-questions", payload);
       alert("Question submitted successfully!");
+
+      const updated = await axios.get("http://localhost:3000/api/admin/set-counts");
+      setSetCounts(updated.data);
+
+      // Reset
       setQuestion("");
       setOptions(["", ""]);
       setCorrectIndex(null);
@@ -48,14 +71,16 @@ const Create = () => {
   return (
     <div className="create-bg">
       <div className="create-container">
-        <h2>Create Question</h2>
+        <h2 className="create">Create Question</h2>
 
-        <input
-          type="text"
-          placeholder="Enter Title (e.g. Data Structures)"
-          value={title}
-          onChange={(e) => setTitle(e.target.value)}
-        />
+        
+        <select value={selectedSet} onChange={(e) => setSelectedSet(Number(e.target.value))}>
+          {[1, 2, 3, 4].map(set => (
+            <option key={set} value={set}>
+              Set {set} ({setCounts[set] || 0}/10)
+            </option>
+          ))}
+        </select>
 
         <input
           type="text"
@@ -82,12 +107,12 @@ const Create = () => {
         ))}
 
         {options.length < 4 && (
-          <button type="button" onClick={addOption}>
+          <button type="button" onClick={addOption} className="add-btn">
             Add Option
           </button>
         )}
 
-        <button type="button" className="submit-btn" onClick={handleSubmit}>
+        <button type="button" className="submitt-btn" onClick={handleSubmit}>
           Submit Question
         </button>
       </div>
