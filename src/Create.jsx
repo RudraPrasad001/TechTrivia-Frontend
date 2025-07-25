@@ -58,7 +58,7 @@ const Create = () => {
       const updated = await axios.get("http://localhost:3000/api/admin/set-counts");
       setSetCounts(updated.data);
 
-      // Reset
+      // Reset form
       setQuestion("");
       setOptions(["", ""]);
       setCorrectIndex(null);
@@ -73,7 +73,6 @@ const Create = () => {
       <div className="create-container">
         <h2 className="create">Create Question</h2>
 
-        
         <select value={selectedSet} onChange={(e) => setSelectedSet(Number(e.target.value))}>
           {[1, 2, 3, 4].map(set => (
             <option key={set} value={set}>
