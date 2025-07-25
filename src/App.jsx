@@ -3,6 +3,7 @@ import Display from "./Display.jsx";
 import Login from "./Login.jsx";
 import Home from "./Home.jsx";
 import Create from "./Create.jsx";
+import Quiz from "./Quiz.jsx";
 function App() {
   
 
@@ -14,6 +15,7 @@ function App() {
       <Route path='/login' element={<Login/>}/>
       <Route path='/home' element={<Home/>}/>
       <Route path='/create' element={<Create/>}/>
+      <Route path='/quizpage' element={<Quiz/>}/>
       
       
     </Routes>

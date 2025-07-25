@@ -18,7 +18,7 @@
   color: #fff;
 }
 
-.create-container h2 {
+.create-container .create {
   text-align: center;
   margin-bottom: 20px;
 }
@@ -52,7 +52,7 @@
   flex: 1;
 }
 
-button {
+.add-btn {
   padding: 10px 16px;
   margin: 10px 5px 0 0;
   background-color: #444cfc;
@@ -63,14 +63,16 @@ button {
   transition: background 0.2s ease;
 }
 
-button:hover {
-  background-color: #3b3fd8;
+.add-btn:hover {
+  background-color: #4469ce;
 }
 
-.submit-btn {
-  background-color: #4f517e;
+.submitt-btn {
+  background-color: #3f894f;
+  transition: background 0.2s ease
 }
 
-.submit-btn:hover {
+.submitt-btn:hover {
+  border-color:green;
   background-color: #00a65a;
 }
