@@ -43,7 +43,7 @@ const startQuiz = async () => {
     const decoded = jwtDecode(token);
     const team_name = decoded.name;
 
-    const setRes = await fetch(`://${URL}/api/admin/random-set`);
+    const setRes = await fetch(`${URL}/api/admin/random-set`);
     const { set } = await setRes.json();
     console.log(`set number assigned : ${set}`);
     const questionRes = await fetch(`${URL}/api/admin/get-questions?set=${set}`);
