@@ -54,11 +54,6 @@ function Quiz() {
     setTimerInterval(interval);
   };
 
-  const stopQuizTimer = () => {
-    clearInterval(timerInterval);
-    const endTime = new Date().toISOString();
-    setEnd(endTime);
-  };
 
   const handleOptionChange = (option) => {
     const currentQuestion = questions[currentIndex];
@@ -87,36 +82,43 @@ function Quiz() {
       setTimeout(() => setCurrentIndex(prev => prev + 1), 500);
     }
   };
+const handleFinish = async () => {
+  const token = Cookies.get("token");
+  const decoded = jwtDecode(token);
+  const team_name = decoded.name;
+  clearInterval(timerInterval);
+  const endTime = new Date().toISOString();
+  setEnd(endTime); 
 
-  const handleFinish = async () => {
-    const token = Cookies.get("token");
-    const decoded = jwtDecode(token);
-    const team_name = decoded.name;
-    try {
+  try {
+    if (team_name) {
       const res = await axios.post("http://localhost:3000/api/timer/calculateScore", {
         user_id: team_name,
         start_time: start,
-        end_time: end,
+        end_time: endTime, 
         score: score,
       });
       const { finalScore, timeTaken } = res.data;
+
       await axios.post("http://localhost:3000/api/timer/saveScore", {
         user_id: team_name,
         final_score: finalScore,
         time_taken: timeTaken,
       });
+
       alert("Quiz submitted successfully!");
       navigate("/");
-    } catch (error) {
-      console.error("Score error:", error.message);
     }
-  };
+  } catch (error) {
+    console.error("Score error:", error.response?.data || error.message);
+  }
+};
+
 
   const handleNext = () => {
     if (currentIndex < questions.length - 1) {
       setCurrentIndex(currentIndex + 1);
     } else if (answers.length === questions.length) {
-      stopQuizTimer();
       setShowFinalScreen(true);
     }
   };
