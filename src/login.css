@@ -1,7 +1,7 @@
 /* Login Page - Styled like Quiz Page */
 
 .login-bg {
-  background: linear-gradient(135deg, #fff9d6, #ffefba);
+  background: #f6e29c;
   width: 100vw;
   height: 100vh;
   display: flex;
@@ -11,7 +11,7 @@
 }
 
 .login-container {
-  background-color: #fffde7;
+  background-color: #f9eed1;
   padding: 40px;
   border-radius: 20px;
   box-shadow: 0 12px 32px rgba(0, 0, 0, 0.15);

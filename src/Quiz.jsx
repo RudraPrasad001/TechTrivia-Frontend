@@ -37,22 +37,36 @@ function Quiz() {
     }
   }, []);
 
-  const startQuiz = () => {
+const startQuiz = async () => {
+  try {
     const token = Cookies.get("token");
     const decoded = jwtDecode(token);
     const team_name = decoded.name;
-    fetch('http://localhost:3000/api/admin/get-questions?set=1')
-      .then(res => res.json())
-      .then(data => setQuestions(data.questions))
-      .catch(err => console.error("Failed to fetch questions", err));
 
+    const setRes = await fetch("http://localhost:3000/api/admin/random-set");
+    const { set } = await setRes.json();
+    console.log(`set number assigned : ${set}`);
+    const questionRes = await fetch(`http://localhost:3000/api/admin/get-questions?set=${set}`);
+    const questionData = await questionRes.json();
+
+    setQuestions(questionData.questions);
+    
     const startTime = new Date().toISOString();
     setStart(startTime);
     setHasStarted(true);
 
     const interval = setInterval(() => setElapsedTime(prev => prev + 1), 1000);
     setTimerInterval(interval);
-  };
+  } catch (err) {
+    console.error("Failed to start quiz:", err);
+  }
+};
+
+
+  
+
+
+
 
 
   const handleOptionChange = (option) => {
@@ -77,10 +91,7 @@ function Quiz() {
     setAnswers(updatedAnswers);
     setSelectedOption(option);
 
-    // Only auto-navigate if not last question
-    if (currentIndex < questions.length - 1) {
-      setTimeout(() => setCurrentIndex(prev => prev + 1), 500);
-    }
+    
   };
 const handleFinish = async () => {
   const token = Cookies.get("token");
@@ -141,13 +152,25 @@ const handleFinish = async () => {
   }, [currentIndex]);
 
   if (!hasStarted) {
-    return (
-      <div className='quiz-container1'>
-        <h2 className='progress'>Start the Quiz</h2>
-        <button onClick={startQuiz} className="submit-btn">Start Quiz</button>
-      </div>
-    );
-  }
+  return (
+    <div className='quiz-container1'>
+      <h2 className='complete'>Quiz Rules</h2>
+      <ul className="rules-list">
+        <li>The quiz contains 10 questions in total. The first 9 questions are multiple-choice questions (MCQs).</li>
+        
+        <li>The 10th question will be a coding question where you must predict the output of a given code snippet.</li>
+        <li>You are allowed to revisit any question during the quiz. You can go to the next or previous question.</li>
+        <li>You can change your answers anytime before submitting.</li>
+        <li>The quiz timer starts as soon as you begin the quiz. Make sure to answer all questions before clicking the finish button.</li>
+        <li>Your final score will be based on both the number of correct answers and the time taken to complete the quiz.</li>
+        
+      </ul>
+      <h2 className='progress'> ALL THE BEST</h2>
+      <button onClick={startQuiz} className="submit-btn">Start Quiz</button>
+    </div>
+  );
+}
+
 
   if (questions.length === 0) return <p>Loading questions...</p>;
 
@@ -155,7 +178,7 @@ const handleFinish = async () => {
     return (
       <div style={{display:"flex",justifyContent:'center',alignItems:'center',height:"100vh"}}>
       <div className='quiz-container1'>
-        <h2 className='progress'>Quiz Completed 🎉</h2>
+        <h2 className='complete'>Quiz Completed 🎉</h2>
         <p className="timer">Time Taken: <strong>{formatTime(elapsedTime)}</strong></p>
         {!showConfirmFinish ? (
           <>

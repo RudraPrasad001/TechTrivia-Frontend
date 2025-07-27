@@ -1,7 +1,7 @@
 body {
   margin: 0;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  background-color: #fffbe6;
+  background-color: #f6e29c;
 }
 
 .quiz-bg {
@@ -10,7 +10,19 @@ body {
   width: 100vw;
   align-items: center;
   min-height: 100vh;
-  background: linear-gradient(135deg, #fff9d6, #ffefba);
+  background: #f6e29c;
+}
+
+.rules-list {
+  text-align: left;
+  font-size: 25px;
+  color:#493603;
+  
+ 
+  
+}
+.rules-list li {
+  margin-bottom: 18px;
 }
 
 .tot-container {
@@ -46,7 +58,13 @@ body {
 
 .progress {
   font-size: 20px;
-  color: #d48806;
+  color: #68470d;
+  font-weight: 600;
+
+}
+.complete{
+  font-size: 40px;
+  color: #68470d;
   font-weight: 600;
 }
 
@@ -94,9 +112,9 @@ body {
 }
 
 .submit-btn {
-  background-color: #ffd666;
+  background-color: #f0ce72;
   border: none;
-  color: #5c3a00;
+  color: #533603;
   font-size: 18px;
   font-weight: 600;
   padding: 14px 28px;
@@ -107,16 +125,16 @@ body {
 }
 
 .submit-btn:hover {
-  background-color: #ffc53d;
+  background-color: #eac05d;
 }
 
 .submit-btn.cancel {
-  background-color: #ffccc7;
-  color: #a8071a;
+  background-color: #f1b9b4;
+  color: #6c0410;
 }
 
 .submit-btn.cancel:hover {
-  background-color: #ffa39e;
+  background-color: #e3afad;
 }
 
 .nav-btns {
@@ -137,6 +155,6 @@ body {
 
 .score {
   font-size: 20px;
-  color: #614700;
+  color: #493603;
   margin: 20px 0;
 }
