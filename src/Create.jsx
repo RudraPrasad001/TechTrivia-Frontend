@@ -3,6 +3,8 @@ import axios from "axios";
 import "./create.css";
 
 const Create = () => {
+
+    const URL = import.meta.env.VITE_API_URL;
   const [question, setQuestion] = useState("");
   const [options, setOptions] = useState(["", ""]);
   const [correctIndex, setCorrectIndex] = useState(null);
@@ -12,7 +14,7 @@ const Create = () => {
   useEffect(() => {
     const fetchSetCounts = async () => {
       try {
-        const res = await axios.get("http://localhost:3000/api/admin/set-counts");
+        const res = await axios.get(`${URL}/api/admin/set-counts`);
         setSetCounts(res.data);
       } catch (err) {
         console.error("Failed to fetch set counts", err);
@@ -52,10 +54,10 @@ const Create = () => {
     };
 
     try {
-      await axios.post("http://localhost:3000/api/admin/add-questions", payload);
+      await axios.post(`http://${URL}/api/admin/add-questions`, payload);
       alert("Question submitted successfully!");
 
-      const updated = await axios.get("http://localhost:3000/api/admin/set-counts");
+      const updated = await axios.get(`http://${URL}/api/admin/set-counts`);
       setSetCounts(updated.data);
 
       // Reset form
