@@ -4,8 +4,11 @@ import Cookies from "js-cookie";
 import { jwtDecode } from "jwt-decode";
 import './quiz.css';
 import axios from 'axios';
+import { meta } from '@eslint/js';
 
 function Quiz() {
+
+    const url = import.meta.env.VITE_API_URL;
   const [questions, setQuestions] = useState([]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [selectedOption, setSelectedOption] = useState(null);
@@ -42,13 +45,13 @@ const startQuiz = async () => {
     const token = Cookies.get("token");
     const decoded = jwtDecode(token);
     const team_name = decoded.name;
-
-    const setRes = await fetch(`://${URL}/api/admin/random-set`);
-    const { set } = await setRes.json();
+    const setRes = await axios.get(`${url}/api/admin/random-set`);
+    console.log(setRes);
+    const  set  = await setRes.data.set;
     console.log(`set number assigned : ${set}`);
-    const questionRes = await fetch(`${URL}/api/admin/get-questions?set=${set}`);
-    const questionData = await questionRes.json();
-
+    const questionRes = await axios.get(`${url}/api/admin/get-questions?set=${set}`);
+    const questionData = questionRes.data;
+    console.log(questionData);
     setQuestions(questionData.questions);
     
     const startTime = new Date().toISOString();
@@ -103,7 +106,7 @@ const handleFinish = async () => {
 
   try {
     if (team_name) {
-      const res = await axios.post(`${URL}/api/timer/calculateScore`, {
+      const res = await axios.post(`${url}/api/timer/calculateScore`, {
         user_id: team_name,
         start_time: start,
         end_time: endTime, 
@@ -111,7 +114,7 @@ const handleFinish = async () => {
       });
       const { finalScore, timeTaken } = res.data;
 
-      await axios.post(`${URL}/api/timer/saveScore`, {
+      await axios.post(`${url}/api/timer/saveScore`, {
         user_id: team_name,
         final_score: finalScore,
         time_taken: timeTaken,
