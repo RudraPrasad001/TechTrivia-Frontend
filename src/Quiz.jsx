@@ -48,6 +48,7 @@ const startQuiz = async () => {
     const setRes = await axios.get(`${url}/api/admin/random-set`);
     console.log(setRes);
     const  set  = await setRes.data.set;
+
     console.log(`set number assigned : ${set}`);
     const questionRes = await axios.get(`${url}/api/admin/get-questions?set=${set}`);
     const questionData = questionRes.data;
