@@ -43,10 +43,10 @@ const startQuiz = async () => {
     const decoded = jwtDecode(token);
     const team_name = decoded.name;
 
-    const setRes = await fetch(`http://${URL}/api/admin/random-set`);
+    const setRes = await fetch(`://${URL}/api/admin/random-set`);
     const { set } = await setRes.json();
     console.log(`set number assigned : ${set}`);
-    const questionRes = await fetch(`http://${URL}/api/admin/get-questions?set=${set}`);
+    const questionRes = await fetch(`${URL}/api/admin/get-questions?set=${set}`);
     const questionData = await questionRes.json();
 
     setQuestions(questionData.questions);
@@ -103,7 +103,7 @@ const handleFinish = async () => {
 
   try {
     if (team_name) {
-      const res = await axios.post(`http://${URL}/api/timer/calculateScore`, {
+      const res = await axios.post(`${URL}/api/timer/calculateScore`, {
         user_id: team_name,
         start_time: start,
         end_time: endTime, 
@@ -111,7 +111,7 @@ const handleFinish = async () => {
       });
       const { finalScore, timeTaken } = res.data;
 
-      await axios.post(`http://${URL}/api/timer/saveScore`, {
+      await axios.post(`${URL}/api/timer/saveScore`, {
         user_id: team_name,
         final_score: finalScore,
         time_taken: timeTaken,
