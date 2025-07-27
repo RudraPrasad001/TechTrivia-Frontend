@@ -5,6 +5,8 @@ import Cookies from "js-cookie";
 import './login.css';
 
 const Login = () => {
+    const URL = import.meta.env.VITE_API_URL;
+    
     const navigate = useNavigate();
 
     const [name, setName] = useState(null);
@@ -21,7 +23,7 @@ const Login = () => {
 
         try {
             const response = await axios.post(
-  "http://localhost:3000/api/auth/login",
+  `${URL}/api/auth/login`,
   {
     name: name,
     password: pass,
