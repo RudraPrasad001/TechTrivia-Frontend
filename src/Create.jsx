@@ -55,7 +55,7 @@ const Create = () => {
     };
 
     try {
-      await axios.post(`http://${URL}/api/admin/add-questions`, payload);
+      await axios.post(`${URL}/api/admin/add-questions`, payload);
       toast.success("Question submitted successfully!");
 
       const updated = await axios.get(`http://${URL}/api/admin/set-counts`);
@@ -84,8 +84,7 @@ const Create = () => {
           ))}
         </select>
 
-        <input
-          type="text"
+        <textarea
           placeholder="Enter Question"
           value={question}
           onChange={(e) => setQuestion(e.target.value)}

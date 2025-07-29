@@ -284,7 +284,11 @@ const handleFinish = async () => {
             <p className="timer">⏱ {formatTime(elapsedTime)}</p>
           </div>
 
-          <p className="question">{current.question_text}</p>
+          <pre className='question' style={{textAlign: "start",
+    whiteSpace: "pre-wrap",  // wraps long lines
+    wordBreak: "break-word", // breaks long words
+    overflowX: "auto",       // allows horizontal scroll if needed
+    maxWidth: "100%"    }}><code>{current.question_text}</code></pre>
 
           <div className="options">
             {current.options.map((opt, idx) => (
