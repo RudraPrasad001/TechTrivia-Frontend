@@ -5,10 +5,12 @@ import { jwtDecode } from "jwt-decode";
 import './quiz.css';
 import axios from 'axios';
 import { meta } from '@eslint/js';
+import toast from 'react-hot-toast';
+import { Backpack, Loader } from 'lucide-react';
 
 function Quiz() {
 
-    const url = import.meta.env.VITE_API_URL;
+  const url = "http://localhost:3000"||import.meta.env.VITE_API_URL;
   const [questions, setQuestions] = useState([]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [selectedOption, setSelectedOption] = useState(null);
@@ -22,11 +24,19 @@ function Quiz() {
   const [user, setUser] = useState(null);
   const [showConfirmFinish, setShowConfirmFinish] = useState(false);
   const [showFinalScreen, setShowFinalScreen] = useState(false);
+  const [ isLoading,setIsLoading] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
+    const submitted=localStorage.getItem("submitted");
+    if(submitted)navigate("/thank-you")
+    setIsLoading(true);
     const token = Cookies.get("token");
-    if (!token) navigate("/");
+    if (!token) {
+      navigate("/")
+      toast.error("Access denied")
+      setIsLoading(false);
+    }
     else {
       try {
         const decoded = jwtDecode(token);
@@ -35,24 +45,25 @@ function Quiz() {
         setUser(userData ? { ...JSON.parse(userData), team_name } : team_name);
       } catch (err) {
         console.error("Invalid token", err);
+        toast.error("Access denied")
         navigate("/");
+      } finally{
+        setIsLoading(false);
       }
     }
   }, []);
 
 const startQuiz = async () => {
+  setIsLoading(true);
   try {
     const token = Cookies.get("token");
     const decoded = jwtDecode(token);
     const team_name = decoded.name;
     const setRes = await axios.get(`${url}/api/admin/random-set`);
-    console.log(setRes);
     const  set  = await setRes.data.set;
 
-    console.log(`set number assigned : ${set}`);
     const questionRes = await axios.get(`${url}/api/admin/get-questions?set=${set}`);
     const questionData = questionRes.data;
-    console.log(questionData);
     setQuestions(questionData.questions);
     
     const startTime = new Date().toISOString();
@@ -62,15 +73,15 @@ const startQuiz = async () => {
     const interval = setInterval(() => setElapsedTime(prev => prev + 1), 1000);
     setTimerInterval(interval);
   } catch (err) {
-    console.error("Failed to start quiz:", err);
+    toast.error("Error in starting the quiz,Try again");
+    setIsLoading(false);
+  } finally{
+    setIsLoading(false);
   }
 };
 
 
   
-
-
-
 
 
   const handleOptionChange = (option) => {
@@ -98,6 +109,7 @@ const startQuiz = async () => {
     
   };
 const handleFinish = async () => {
+  setIsLoading(true);
   const token = Cookies.get("token");
   const decoded = jwtDecode(token);
   const team_name = decoded.name;
@@ -120,12 +132,14 @@ const handleFinish = async () => {
         final_score: finalScore,
         time_taken: timeTaken,
       });
-
-      alert("Quiz submitted successfully!");
-      navigate("/");
+      localStorage.setItem("submitted","true");
+      toast.success("Quiz submitted successfully!");
+      navigate("/thank-you");
     }
   } catch (error) {
+    toast.error("Quiz submission failed!")
     console.error("Score error:", error.response?.data || error.message);
+    setIsLoading(false);
   }
 };
 
@@ -155,10 +169,12 @@ const handleFinish = async () => {
     setSelectedOption(saved);
   }, [currentIndex]);
 
+  
+
   if (!hasStarted) {
   return (
     <div className='quiz-container1'>
-      <h2 className='complete'>Quiz Rules</h2>
+      <p className='complete'>Quiz Rules</p>
       <ul className="rules-list">
         <li>The quiz contains 10 questions in total. The first 9 questions are multiple-choice questions (MCQs).</li>
         
@@ -169,8 +185,8 @@ const handleFinish = async () => {
         <li>Your final score will be based on both the number of correct answers and the time taken to complete the quiz.</li>
         
       </ul>
-      <h2 className='progress'> ALL THE BEST</h2>
-      <button onClick={startQuiz} className="submit-btn">Start Quiz</button>
+      <p className='progress' style={{marginTop:"0",marginLeft:"1%",fontSize:"28px",fontWeight:"bolder",padding:"0px",marginBottom:"0"}}> ALL THE BEST</p>
+      <button onClick={startQuiz} className="submit-btn" disabled={isLoading} style={{alignSelf:"center",width:"30%",marginBottom:"3%"}}>{isLoading?<Loader></Loader>:"Start Quiz"}</button>
     </div>
   );
 }
@@ -196,7 +212,7 @@ const handleFinish = async () => {
         ) : (
           <>
             <p className='score'>Are you sure you want to submit?</p>
-            <button className='submit-btn' onClick={handleFinish}>Yes, Submit</button>
+            <button className='submit-btn' disabled={isLoading} style={isLoading?{opacity:"0.6"}:{opacity:"1"}} onClick={handleFinish}>{isLoading?<Loader></Loader>:"Yes,Submit"}</button>
             <button className='submit-btn cancel' onClick={() => setShowConfirmFinish(false)}>Cancel</button>
           </>
         )}
@@ -220,17 +236,19 @@ const handleFinish = async () => {
 
           <div className="options">
             {current.options.map((opt, idx) => (
-              <label key={idx} className="option-label">
-                <input
-                  type="radio"
+                <label key={idx} className="option-label">
+              <input
+                  type="checkbox"
                   name="option"
                   value={opt}
+                  className='radio-input'
                   checked={selectedOption === opt}
                   onChange={() => handleOptionChange(opt)}
                 />
                 {opt}
               </label>
             ))}
+            
           </div>
 
           <div className="nav-btns">
