@@ -6,6 +6,7 @@ import Create from "./Create.jsx";
 import Quiz from "./Quiz.jsx";
 import {Toaster} from "react-hot-toast"
 import ThankYou from "./Thankyou.jsx";
+import Disqualified from "./Disqualified.jsx";
 function App() {
   
 
@@ -18,14 +19,16 @@ function App() {
       <Route path='/home' element={<Home/>}/>
       <Route path='/create' element={<Create/>}/>
       <Route path='/quizpage' element={<Quiz/>}/>
-      <Route path='/Thank-you' element={<ThankYou/>}/>
+      <Route path='/thank-you' element={<ThankYou/>}/>
+      <Route path="/disqualified" element={<Disqualified/>}></Route>
       
     </Routes>
 
     <Toaster toastOptions={{
           style: {
-            background: '#614700',
-            color: '#fff',
+            background: '#ffe58f',
+            color: '#614700',
+            fontWeight:"bold",
             borderRadius: '8px',
           },
         }}></Toaster>

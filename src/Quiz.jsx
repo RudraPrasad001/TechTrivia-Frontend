@@ -30,6 +30,8 @@ function Quiz() {
   useEffect(() => {
     const submitted=localStorage.getItem("submitted");
     if(submitted)navigate("/thank-you")
+    const disqualified = localStorage.getItem("quizDisqualified");
+    if(disqualified)navigate("/disqualified")
     setIsLoading(true);
     const token = Cookies.get("token");
     if (!token) {
@@ -52,6 +54,33 @@ function Quiz() {
       }
     }
   }, []);
+
+  useEffect(() => {
+    const handleFullscreenChange = () => {
+      const isFullscreen =
+        document.fullscreenElement ||
+        document.webkitFullscreenElement ||
+        document.mozFullScreenElement ||
+        document.msFullscreenElement;
+
+      if (!isFullscreen) {
+        localStorage.setItem('disqualified', 'true');
+        navigate('/disqualififed');
+      }
+    };
+
+    document.addEventListener('fullscreenchange', handleFullscreenChange);
+    document.addEventListener('webkitfullscreenchange', handleFullscreenChange);
+    document.addEventListener('mozfullscreenchange', handleFullscreenChange);
+    document.addEventListener('MSFullscreenChange', handleFullscreenChange);
+
+    return () => {
+      document.removeEventListener('fullscreenchange', handleFullscreenChange);
+      document.removeEventListener('webkitfullscreenchange', handleFullscreenChange);
+      document.removeEventListener('mozfullscreenchange', handleFullscreenChange);
+      document.removeEventListener('MSFullscreenChange', handleFullscreenChange);
+    };
+  }, [navigate]);
 
 const startQuiz = async () => {
   setIsLoading(true);
@@ -169,7 +198,30 @@ const handleFinish = async () => {
     setSelectedOption(saved);
   }, [currentIndex]);
 
-  
+  useEffect(() => {
+    const handleFullscreenChange = () => {
+      const isFullscreen =
+        document.fullscreenElement ||
+        document.webkitFullscreenElement ||
+        document.mozFullScreenElement ||
+        document.msFullscreenElement;
+
+      if (!isFullscreen) {
+        localStorage.setItem("quizDisqualified", "true");
+        toast.error("You exited full screen. You are disqualified.");
+        navigate("/disqualified");
+      }
+    };
+
+    document.addEventListener("fullscreenchange", handleFullscreenChange);
+    document.addEventListener("webkitfullscreenchange", handleFullscreenChange);
+
+    return () => {
+        document.removeEventListener("fullscreenchange", handleFullscreenChange);
+        document.removeEventListener("webkitfullscreenchange", handleFullscreenChange);
+      };
+    }, [navigate]);
+
 
   if (!hasStarted) {
   return (
@@ -185,7 +237,7 @@ const handleFinish = async () => {
         <li>Your final score will be based on both the number of correct answers and the time taken to complete the quiz.</li>
         
       </ul>
-      <p className='progress' style={{marginTop:"0",marginLeft:"1%",fontSize:"28px",fontWeight:"bolder",padding:"0px",marginBottom:"0"}}> ALL THE BEST</p>
+      <p className='progress'  style={{marginTop:"0",marginLeft:"1%",fontSize:"28px",fontWeight:"bolder",padding:"0px",marginBottom:"0",color:" #f7e7ae"}}> ALL THE BEST</p>
       <button onClick={startQuiz} className="submit-btn" disabled={isLoading} style={{alignSelf:"center",width:"30%",marginBottom:"3%"}}>{isLoading?<Loader></Loader>:"Start Quiz"}</button>
     </div>
   );
@@ -196,13 +248,13 @@ const handleFinish = async () => {
 
   if (showFinalScreen) {
     return (
-      <div style={{display:"flex",justifyContent:'center',alignItems:'center',height:"100vh"}}>
+      <div style={{display:"flex",justifyContent:'center',alignItems:'center',height:"100vh",}}>
       <div className='quiz-container1'>
         <h2 className='complete'>Quiz Completed 🎉</h2>
-        <p className="timer">Time Taken: <strong>{formatTime(elapsedTime)}</strong></p>
+        <p className="timer" style={{color:" #f7e7ae"}}>Time Taken: <strong>{formatTime(elapsedTime)}</strong></p>
         {!showConfirmFinish ? (
           <>
-            <p className="score">Click Finish to end the Quiz. You can also go back to review your answers.</p>
+            <p className="score" style={{color:" #f7e7ae"}}>Click Finish to end the Quiz. You can also go back to review your answers.</p>
             <button className='submit-btn' onClick={() => setShowConfirmFinish(true)}>Finish</button>
             <button className='submit-btn cancel' onClick={() => {
               setShowFinalScreen(false);
@@ -211,7 +263,7 @@ const handleFinish = async () => {
           </>
         ) : (
           <>
-            <p className='score'>Are you sure you want to submit?</p>
+            <p className='score' style={{color:" #f7e7ae"}}>Are you sure you want to submit?</p>
             <button className='submit-btn' disabled={isLoading} style={isLoading?{opacity:"0.6"}:{opacity:"1"}} onClick={handleFinish}>{isLoading?<Loader></Loader>:"Yes,Submit"}</button>
             <button className='submit-btn cancel' onClick={() => setShowConfirmFinish(false)}>Cancel</button>
           </>
