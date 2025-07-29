@@ -10,7 +10,7 @@ import { Backpack, Loader } from 'lucide-react';
 
 function Quiz() {
 
-  const url = "http://localhost:3000"||import.meta.env.VITE_API_URL;
+  const url = import.meta.env.VITE_API_URL;
   const [questions, setQuestions] = useState([]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [selectedOption, setSelectedOption] = useState(null);
