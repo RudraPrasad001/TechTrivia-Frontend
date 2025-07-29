@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import Cookies from "js-cookie"; 
@@ -39,6 +39,7 @@ const Login = () => {
                 Cookies.set("token", token, { expires: 7 }); 
                 Cookies.set("user", JSON.stringify(user), { expires: 7 });
                 toast.success("Login Completed Successfully");
+                goFullscreen();
                 navigate("/quizpage");
             } else {
                 toast.error("Login failed: Invalid response from server");
@@ -52,6 +53,7 @@ const Login = () => {
             setIsLoading(false)
         }
     };
+
 
     return (
         <div className="login-bg">
@@ -76,5 +78,17 @@ const Login = () => {
         </div>
     );
 };
+
+function goFullscreen() {
+  const elem = document.documentElement;
+  
+  if (elem.requestFullscreen) {
+    elem.requestFullscreen();
+  } else if (elem.webkitRequestFullscreen) {
+    elem.webkitRequestFullscreen();
+  } else if (elem.msRequestFullscreen) {
+    elem.msRequestFullscreen();
+  }
+}
 
 export default Login;

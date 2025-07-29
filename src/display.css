@@ -2,6 +2,7 @@ body {
   margin: 0;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   background-color: #ebd173;
+  color: #f7e7ae;
 }
 
 .bg {
@@ -12,19 +13,32 @@ body {
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  background-color: #f6e29c;
+  background-color: #282519;
   background-image: url("/src/assets/dark-circles.png");
+}
+
+.header{
+  text-align: center;
+  
+}
+
+.header h1,h3{
+  text-shadow: 0 6px 20px rgba(255, 215, 102, 0.4);
 }
 
 .content {
   text-align: center;
-  margin-bottom: 30px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 4%;
 }
 
 .title-image {
-  width: 320px;
+  width: 280px;
   max-width: 90%;
   border: 4px solid #ffe58f;
+  margin-top: 4%;
   border-radius: 20px;
   box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
 }
@@ -34,7 +48,7 @@ body {
   border: none;
   color: #5c3a00;
   font-size: 20px;
-  font-weight: 600;
+  font-weight: bolder;
   padding: 16px 36px;
   border-radius: 14px;
   cursor: pointer;
