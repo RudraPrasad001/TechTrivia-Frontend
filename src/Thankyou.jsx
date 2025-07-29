@@ -4,9 +4,6 @@ import Typewriter from 'react-typewriter-effect';
 
 const ThankYou=()=>{
     const navigate=useNavigate();
-    const handleLogin=()=>{
-        navigate('/login');
-    }
 
     return(
         <>
