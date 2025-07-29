@@ -7,24 +7,23 @@
   justify-content: center;
   align-items: center;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  background-color: #f6e29c;
+  background-color: #282519;
   background-image: url("/src/assets/dark-circles.png");
 }
 
 .login-container {
-  background-color: #f9eed1;
+  background-color: transparent;
   padding: 40px;
   border-radius: 20px;
   box-shadow: 0 12px 32px rgba(0, 0, 0, 0.15);
   text-align: center;
   max-width: 420px;
   width: 100%;
-  border: 3px solid #ffe58f;
 }
 
 .login-title {
-  color: #614700;
-  font-size: 32px;
+  color: #ffe58f;
+  font-size: 44px;
   margin-bottom: 30px;
   text-shadow: 0 0 6px rgba(128, 96, 0, 0.3);
   letter-spacing: 1px;
@@ -36,8 +35,8 @@
   margin: 14px 0;
   border: 2px solid #ffe58f;
   border-radius: 10px;
-  background-color: #fffbe6;
-  color: #5c3a00;
+  background-color: #282519;
+  color: #ffe58f;
   font-size: 15px;
   outline: none;
   transition: border-color 0.3s, box-shadow 0.3s, background-color 0.3s;
@@ -47,6 +46,7 @@
   border-color: #ffd666;
   box-shadow: 0 0 8px #ffe58f;
   background-color: #fffef0;
+  color:#282519;
 }
 
 .fields button {
