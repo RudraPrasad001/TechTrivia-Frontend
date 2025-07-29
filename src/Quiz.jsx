@@ -11,6 +11,7 @@ import { Backpack, Loader } from 'lucide-react';
 function Quiz() {
 
   const url = import.meta.env.VITE_API_URL;
+  const [remainingTime, setRemainingTime] = useState(600); // 10 minutes = 600 seconds
   const [questions, setQuestions] = useState([]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [selectedOption, setSelectedOption] = useState(null);
@@ -89,7 +90,7 @@ const startQuiz = async () => {
     const decoded = jwtDecode(token);
     const team_name = decoded.name;
     const setRes = await axios.get(`${url}/api/admin/random-set`);
-    const  set  = await setRes.data.set;
+    const set = await setRes.data.set;
 
     const questionRes = await axios.get(`${url}/api/admin/get-questions?set=${set}`);
     const questionData = questionRes.data;
@@ -99,15 +100,24 @@ const startQuiz = async () => {
     setStart(startTime);
     setHasStarted(true);
 
-    const interval = setInterval(() => setElapsedTime(prev => prev + 1), 1000);
+    const interval = setInterval(() => {
+      setRemainingTime(prev => {
+        if (prev <= 1) {
+          clearInterval(interval);
+          handleFinish(); // auto-submit
+          return 0;
+        }
+        return prev - 1;
+      });
+    }, 1000);
     setTimerInterval(interval);
   } catch (err) {
     toast.error("Error in starting the quiz,Try again");
-    setIsLoading(false);
-  } finally{
+  } finally {
     setIsLoading(false);
   }
 };
+
 
 
   
@@ -138,6 +148,8 @@ const startQuiz = async () => {
     
   };
 const handleFinish = async () => {
+  if (localStorage.getItem("submitted")) return;
+
   setIsLoading(true);
   const token = Cookies.get("token");
   const decoded = jwtDecode(token);
@@ -161,16 +173,18 @@ const handleFinish = async () => {
         final_score: finalScore,
         time_taken: timeTaken,
       });
-      localStorage.setItem("submitted","true");
+      localStorage.setItem("submitted", "true");
       toast.success("Quiz submitted successfully!");
       navigate("/thank-you");
     }
   } catch (error) {
-    toast.error("Quiz submission failed!")
+    toast.error("Quiz submission failed!");
     console.error("Score error:", error.response?.data || error.message);
+  } finally {
     setIsLoading(false);
   }
 };
+
 
 
   const handleNext = () => {
@@ -251,7 +265,7 @@ const handleFinish = async () => {
       <div style={{display:"flex",justifyContent:'center',alignItems:'center',height:"100vh",}}>
       <div className='quiz-container1'>
         <h2 className='complete'>Quiz Completed 🎉</h2>
-        <p className="timer" style={{color:" #f7e7ae"}}>Time Taken: <strong>{formatTime(elapsedTime)}</strong></p>
+        <p className="timer" style={{color:" #f7e7ae"}}>Time Left: <strong>{formatTime(remainingTime)}</strong></p>
         {!showConfirmFinish ? (
           <>
             <p className="score" style={{color:" #f7e7ae"}}>Click Finish to end the Quiz. You can also go back to review your answers.</p>
@@ -281,7 +295,7 @@ const handleFinish = async () => {
         <div className='quiz-container'>
           <div className="quiz-header">
             <h4 className="progress">Question {currentIndex + 1} of {questions.length}</h4>
-            <p className="timer">⏱ {formatTime(elapsedTime)}</p>
+            <p className="timer">⏱ {formatTime(remainingTime)}</p>
           </div>
 
           <pre className='question' style={{textAlign: "start",
