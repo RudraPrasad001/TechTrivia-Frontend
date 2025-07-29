@@ -1,13 +1,14 @@
 /* Login Page - Styled like Quiz Page */
 
 .login-bg {
-  background: #f6e29c;
   width: 100vw;
   height: 100vh;
   display: flex;
   justify-content: center;
   align-items: center;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: #f6e29c;
+  background-image: url("/src/assets/dark-circles.png");
 }
 
 .login-container {

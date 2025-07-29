@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 import "./create.css";
+import toast from "react-hot-toast";
 
 const Create = () => {
 
@@ -37,12 +38,12 @@ const Create = () => {
 
   const handleSubmit = async () => {
     if (!question || correctIndex === null || options.some(opt => opt.trim() === "")) {
-      alert("Please fill all fields and select a correct answer.");
+      toast.success("Please fill all fields and select a correct answer.");
       return;
     }
 
     if (setCounts[selectedSet] >= 10) {
-      alert(`Set ${selectedSet} already has 10 questions (limit reached).`);
+      toast.success(`Set ${selectedSet} already has 10 questions (limit reached).`);
       return;
     }
 
@@ -55,7 +56,7 @@ const Create = () => {
 
     try {
       await axios.post(`http://${URL}/api/admin/add-questions`, payload);
-      alert("Question submitted successfully!");
+      toast.success("Question submitted successfully!");
 
       const updated = await axios.get(`http://${URL}/api/admin/set-counts`);
       setSetCounts(updated.data);
@@ -66,7 +67,7 @@ const Create = () => {
       setCorrectIndex(null);
     } catch (error) {
       console.error("Error submitting question:", error);
-      alert("Something went wrong while submitting the question.");
+      toast.success("Something went wrong while submitting the question.");
     }
   };
 
