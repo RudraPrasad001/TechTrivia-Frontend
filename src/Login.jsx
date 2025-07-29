@@ -7,7 +7,7 @@ import toast from "react-hot-toast";
 import {Loader} from "lucide-react"
 
 const Login = () => {
-    const URL = "http://localhost:3000"||import.meta.env.VITE_API_URL;
+    const URL = import.meta.env.VITE_API_URL;
     
     const navigate = useNavigate();
 
